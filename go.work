@@ -1,0 +1,9 @@
+go 1.21.6
+
+use (
+	./_harness/server
+	./domains/_api
+	./domains/_schema
+	./domains/_shared
+	./domains/todo
+)

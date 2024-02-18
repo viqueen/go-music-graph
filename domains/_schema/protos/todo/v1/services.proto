@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+option go_package = "github.com/viqueen/go-platform/domains/_api/todo/v1;todoV1";
+
+import "todo/v1/models.proto";
+
+service TodoService {
+  rpc Create(CreateTodoRequest) returns (TodoResponse);
+  rpc CreateMany(CreateManyTodosRequest) returns (stream CreateManyTodosResponse);
+  rpc Read(ReadTodoRequest) returns (TodoResponse);
+  rpc ReadMany(ReadManyTodosRequest) returns (ReadManyTodosResponse);
+  rpc Update(UpdateTodoRequest) returns (TodoResponse);
+  rpc Delete(DeleteTodoRequest) returns (TodoResponse);
+}
+
+message CreateTodoRequest {
+  string title = 1;
+}
+
+message CreateManyTodosRequest {
+  repeated CreateTodoRequest todos = 1;
+}
+
+message ReadTodoRequest {
+  string id = 1;
+}
+
+message ReadManyTodosRequest {
+  int32 page_size = 1;
+  int32 page_offset = 2;
+}
+
+message UpdateTodoRequest {
+  enum UpdateStrategy {
+    PATCH = 0;
+    ALL = 1;
+  }
+  UpdateStrategy update_strategy = 1;
+  Todo todo = 2;
+}
+
+message DeleteTodoRequest {
+  enum DeleteStrategy {
+    SOFT = 0;
+    HARD = 1;
+  }
+  DeleteStrategy delete_strategy = 1;
+  string id = 2;
+}
+
+message TodoResponse {
+  Todo todo = 1;
+}
+
+message CreateManyTodosResponse {
+  int32 created = 1;
+  int32 failed = 2;
+  int32 total = 3;
+}
+
+message ReadManyTodosResponse {
+  repeated Todo todos = 1;
+  int32 next_page_offset = 2;
+}
